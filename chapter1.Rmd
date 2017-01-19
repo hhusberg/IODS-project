@@ -1,4 +1,10 @@
 
 # About the project
 
-*Write a short description about the course and add a link to your github repository here. This is an R markdown (.Rmd) file so you can use R markdown syntax. See the 'Useful links' page in the mooc area (chapter 1) for instructions.*
+## A short description
+
+This seems to be the course I've been looking for. The three-fold message in the title refers to important aspects of how I wish to conduct my own research (_Open Data, Open Science and Data Science_). The way it's set up is also promising. Let's see how it goes!
+
+Oh, and my repository is [here](https://github.com/hhusberg/IODS-project)
+
+-_Henrik_
