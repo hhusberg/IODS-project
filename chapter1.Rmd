@@ -5,10 +5,10 @@
 
 This seems to be the course I've been looking for. The three-fold message in the title refers to important aspects of how I wish to conduct my own research (_Open Data, Open Science and Data Science_). The way it's set up is also promising. Let's see how it goes!
 
-What I hope to learn during the course is:
-* How to analyse data with R
-* How to find more information on how to use R
-* How to analyze large, open data-sets
+What I hope to learn during the course is:  
+1. How to analyse data with R  
+2. How to find more information on how to use R  
+3. How to analyze large, open data-sets  
 
 Oh, and my repository is [here](https://github.com/hhusberg/IODS-project)
 
