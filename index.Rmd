@@ -3,7 +3,7 @@ title: "IODS course project"
 author: "Henrik Husberg"
 output:
   html_document:
-    theme: cayman
+    theme: cerulean
     toc: true
     toc_depth: 2
     fig_caption: true
