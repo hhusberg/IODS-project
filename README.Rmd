@@ -3,6 +3,10 @@
 This course is called Open Data Science. During the course I hope to learn to use R, but also to understand statistical analyses better. As stated in the [course description](https://wiki.helsinki.fi/display/SocStats/Introduction+to+Open+Data+Science,+spring+2017) data today is 
 _```larger than ever and complex like chaos```_.
 
+![_Random picture of chaos_](Recurrence_plot_of_mathematicaly_generated_chaos.jpg)
+
+
+
 I hope this course will help me see some order in that chaos.
 
 My diary can be found [here](https://hhusberg.github.io/IODS-project/)
