@@ -170,7 +170,38 @@ $(document).ready(function () {
 <li>Assume the reader has no previous knowledge of your data or the more advanced methods you are using</li>
 </ul>
 <p>After managing to create a working dataframe containing the variables of interest and saving it to a local .csv-file I’m now ready to start analyzing.</p>
-<p>Step one of any analysis for me is to get to know the data.</p>
+<p>Step one of any analysis for me is to get to know the data. To start off with I’ll run</p>
+<pre class="r"><code>learning2014 &lt;- read.csv(&quot;./data/learning2014.csv&quot;)
+head(learning2014)</code></pre>
+<pre><code>##   age attitude points gender deep stra surf
+## 1  53       37     25      F   43   27   31
+## 2  55       31     12      M   35   22   38
+## 3  49       25     24      F   42   29   27
+## 4  53       35     10      M   42   25   27
+## 5  49       37     22      M   44   29   34
+## 6  38       38     21      F   57   29   29</code></pre>
+<p>So now I know what variables I’m working with and something about the scale. The names of the variables refer to the age of the participants, their attitudes towards statistics (as measured by SATS <a href="http://www.evaluationandstatistics.com/">(Survey of Attitudes Toward Statistics)</a>), their exam points, their gender and approaches to studying (deep learning, strategy use and surface learning) - respectively. The last three variables are sum scores of items representing the named dimensions. These were measured using ASSIST B <a href="http://www.etl.tla.ed.ac.uk/questionnaires/ASSIST.pdf">(Approaches and Study Skills Inventory for Students)</a>.</p>
+<p>Next I’ll want to know more about my data, namely the number of observations I’m working with, so I’ll run</p>
+<pre class="r"><code>dim(learning2014)</code></pre>
+<pre><code>## [1] 166   7</code></pre>
+<p>Ok, so I’ve got 166 observations of the above mentioned seven variables. Next I’ll pull up some descriptive statistics</p>
+<pre class="r"><code>summary(learning2014)</code></pre>
+<pre><code>##       age           attitude         points      gender       deep      
+##  Min.   :17.00   Min.   :14.00   Min.   : 7.00   F:110   Min.   :19.00  
+##  1st Qu.:21.00   1st Qu.:26.00   1st Qu.:19.00   M: 56   1st Qu.:40.00  
+##  Median :22.00   Median :32.00   Median :23.00           Median :44.00  
+##  Mean   :25.51   Mean   :31.43   Mean   :22.72           Mean   :44.16  
+##  3rd Qu.:27.00   3rd Qu.:37.00   3rd Qu.:27.75           3rd Qu.:49.00  
+##  Max.   :55.00   Max.   :50.00   Max.   :33.00           Max.   :59.00  
+##       stra            surf      
+##  Min.   :10.00   Min.   :19.00  
+##  1st Qu.:21.00   1st Qu.:29.00  
+##  Median :25.50   Median :34.00  
+##  Mean   :24.97   Mean   :33.45  
+##  3rd Qu.:29.00   3rd Qu.:38.00  
+##  Max.   :40.00   Max.   :52.00</code></pre>
+<p>This tells me a bit more about the data. About two thirds of the participants were female, the youngest participant was 17 and the oldest 55. The mean and median age was quite a bit younger than yours truly would have been in 2014, but what the hey…</p>
+<p>Time to get graphical. This is and important part of getting to know the data, because when studying the graphs you can quickly spot if something in the data is off.</p>
 <hr />
 </div>
 
