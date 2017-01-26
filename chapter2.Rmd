@@ -1,7 +1,26 @@
-# Insert chapter 2 title here
-
-*Describe the work you have done this week and summarize your learning.*
+# Chapter 2 - Regression analysis using R
 
 - Describe your work and results clearly. 
 - Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods
 - Assume the reader has no previous knowledge of your data or the more advanced methods you are using  
+
+After managing to create a working dataframe containing the variables of interest and saving it to a local .csv-file I'm now ready to start analyzing.
+
+Step one of any analysis for me is to get to know the data. To start off with I'll run
+```{r}
+learning2014 <- read.csv("./data/learning2014.csv")
+head(learning2014)
+```
+So now I know what variables I'm working with and something about the scale. The names of the variables refer to the age of the participants, their attitudes towards statistics (as measured by SATS [(Survey of Attitudes Toward Statistics)](http://www.evaluationandstatistics.com/)), their exam points, their gender and approaches to studying (deep learning, strategy use and surface learning) - respectively. The last three variables are sum scores of items representing the named dimensions. These were measured using ASSIST B [(Approaches and Study Skills Inventory for Students)](http://www.etl.tla.ed.ac.uk/questionnaires/ASSIST.pdf).
+
+Next I'll want to know more about my data, namely the number of observations I'm working with, so I'll run
+```{r}
+dim(learning2014)
+```
+Ok, so I've got 166 observations of the above mentioned seven variables. Next I'll pull up some descriptive statistics
+```{r}
+summary(learning2014)
+```
+This tells me a bit more about the data. About two thirds of the participants were female, the youngest participant was 17 and the oldest 55. The mean and median age was quite a bit younger than yours truly would have been in 2014, but what the hey...
+
+Time to get graphical. This is and important part of getting to know the data, because when studying the graphs you can quickly spot if something in the data is off.
