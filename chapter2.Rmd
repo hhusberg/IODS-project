@@ -33,4 +33,36 @@ library(ggplot2)
 p <- ggpairs(learning2014, mapping = aes(col = gender, alpha = 0.3), lower = list(combo = wrap("facethist", bins = 20)))
 p
 ```
-With the data plotted I can draw some conclusions regarding the data. 
+
+With the data plotted I can draw some conclusions regarding the data. First of all (except for gender) most variables show some approximation of a normal distribution. We also see that some of the variables contain quite obivious outliers, we'll get back to those later I guess. We also get a set of correlations. In this plot matrix I've color coded for gender, so we can read total correlations and correlations by gender. From these we can roughly see for example which variables correlate with total amount of points. The strongest absolute correlates with points are attitude (.437), strategy (.146) and surface learning (-.144). (Although if we consider males and females separately, deep learning would actually surpass all other variables with a correlation of -.622. Interesting.)
+
+Ok, so now that we have had a look at the variables it's time to see how they interact. In this exercise I've chosen to regress the variables _attitude_, _stra_ and _surf_ on _points_ to see how much of total exam points these three variables explain.
+
+To do this I'll run multiple regressions, like so:
+```{r}
+model1 <- lm(points ~ attitude + deep + surf, data = learning2014)
+summary(model1)
+```
+
+Alright, so of these variables only attitude seems to explain points at a statistically significant level: $(\beta = .35, p < 0.001).$ 
+
+
+
+Now I'll create a new model removing the non-significant variables. This gives us the following simple regression:
+```{r}
+model2 <- lm(points ~ attitude, data = learning2014)
+summary(model2)
+```
+We can make some general observations regarding the model. The residuals look quite alright. To make sure I'll run some plots:
+```{r}
+par(mfrow = c(2,2))
+plot(model2)
+```
+
+
+To my eye this seems rather OK. There are a few outliers that seem to have some leverage and if I were a bit more worried about these I could remove them and rerun the model. However I feel OK with interpreting the results as they are. Now I'll plot my regression line:
+```{r}
+qplot(attitude, points, data = learning2014) + geom_smooth(method = "lm")
+```
+
+From the model summary above we know that one more point on the attitude scale predicts a .35 increase in points. This relationship is displayed in the graphic above. The multiple R squared in our summary is about .19, meaning our model explains approximately 19% of the variance in points. Since p < .001 we can conclude that there is a strong possiblity that this relationship is not due to chance. I also feel confident that our data does not violate the assumptions of the model since there is no indication of a non-linear relationship and the errors are normally distributed.
