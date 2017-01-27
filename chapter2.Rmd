@@ -24,3 +24,13 @@ summary(learning2014)
 This tells me a bit more about the data. About two thirds of the participants were female, the youngest participant was 17 and the oldest 55. The mean and median age was quite a bit younger than yours truly would have been in 2014, but what the hey...
 
 Time to get graphical. This is an important part of getting to know the data, because when studying the graphs you can quickly spot if something in the data is off.
+
+In R it's easy to (relatively) quickly draw some plots to get an overview of the data using:
+```{r}
+library(GGally)
+library(ggplot2)
+
+p <- ggpairs(learning2014, mapping = aes(col = gender, alpha = 0.3), lower = list(combo = wrap("facethist", bins = 20)))
+p
+```
+With the data plotted I can draw some conclusions regarding the data. 

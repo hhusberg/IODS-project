@@ -7,3 +7,9 @@ dim(learning2014)
 summary(learning2014)
 
 #Getting graphical
+library(ggplot2)
+library(GGally)
+
+#Plot matrix for all variables
+p <- ggpairs(learning2014, mapping = aes(col = gender, alpha = 0.3), lower = list(combo = wrap("facethist", bins = 20)))
+p
