@@ -6,6 +6,7 @@
 
 After managing to create a working dataframe containing the variables of interest and saving it to a local .csv-file I'm now ready to start analyzing.
 
+<!-- Step 1, 2p -->
 Step one of any analysis for me is to get to know the data. To start off with I'll run
 ```{r}
 learning2014 <- read.csv("./data/learning2014.csv")
@@ -23,6 +24,7 @@ summary(learning2014)
 ```
 This tells me a bit more about the data. About two thirds of the participants were female, the youngest participant was 17 and the oldest 55. The mean and median age was quite a bit younger than yours truly would have been in 2014, but what the hey...
 
+<!-- Step 2, 3p -->
 Time to get graphical. This is an important part of getting to know the data, because when studying the graphs you can quickly spot if something in the data is off.
 
 In R it's easy to (relatively) quickly draw some plots to get an overview of the data using:
@@ -36,6 +38,7 @@ p
 
 With the data plotted I can draw some conclusions regarding the data. First of all (except for age) most variables show some approximation of a normal distribution. We also see that some of the variables contain quite obivious outliers, we'll get back to those later I guess. We also get a set of correlations. In this plot matrix I've color coded for gender, so we can read total correlations and correlations by gender. From these we can roughly see for example which variables correlate with total amount of points. The strongest absolute correlates with points are _attitude_ (.437), _strategy_ (.146) and _surface_ learning (-.144). (Although if we consider males and females separately, deep learning would actually surpass all other variables with a correlation of -.622 for males. Interesting.)
 
+<!-- Step 3, 4p -->
 Ok, so now that we have had a look at the variables it's time to see how they interact. In this exercise I've chosen to regress the variables _attitude_, _stra_ and _surf_ on _points_ to see how much of total exam points these three variables explain.
 
 To do this I'll run multiple regressions, like so:
@@ -53,16 +56,18 @@ Now I'll create a new model removing the non-significant variables. This gives u
 model2 <- lm(points ~ attitude, data = learning2014)
 summary(model2)
 ```
-We can make some general observations regarding the model. The residuals look quite alright. To make sure I'll run some plots:
+We can make some general observations regarding the model. From the model summary above we know that one more point on the _attitude_ scale predicts a .35 increase in _points_. This relationship is displayed in the graphic above. The multiple R squared in our summary is about .19, meaning our model explains approximately 19% of the variance in _points_. Since p < .001 we can conclude that there is a strong possiblity that this relationship is not due to chance. To illustrate the relationship I'll plot my data together with the regression line:
+```{r}
+qplot(attitude, points, data = learning2014) + geom_smooth(method = "lm")
+```
+
+
+Now I still need to check that my data doesn't violate the assumptions of the model. The residuals look quite alright. To make sure I'll run some plots:
 ```{r}
 par(mfrow = c(2,2))
 plot(model2)
 ```
 
 
-To my eye this seems rather OK. There are a few outliers that seem to have some leverage and if I were a bit more worried about these I could remove them and rerun the model. However I feel OK with interpreting the results as they are. Now I'll plot my regression line:
-```{r}
-qplot(attitude, points, data = learning2014) + geom_smooth(method = "lm")
-```
+To my eye this seems rather OK. There are a few outliers that seem to have some leverage and if I were a bit more worried about these I could remove them and rerun the model. However I feel OK with interpreting the results as they are. I also feel confident that our data does not violate the assumptions of the model since there is no indication of a non-linear relationship and the errors are normally distributed.
 
-From the model summary above we know that one more point on the _attitude_ scale predicts a .35 increase in _points_. This relationship is displayed in the graphic above. The multiple R squared in our summary is about .19, meaning our model explains approximately 19% of the variance in _points_. Since p < .001 we can conclude that there is a strong possiblity that this relationship is not due to chance. I also feel confident that our data does not violate the assumptions of the model since there is no indication of a non-linear relationship and the errors are normally distributed.
