@@ -56,7 +56,8 @@ Now I'll create a new model removing the non-significant variables. This gives u
 model2 <- lm(points ~ attitude, data = learning2014)
 summary(model2)
 ```
-We can make some general observations regarding the model. From the model summary above we know that one more point on the _attitude_ scale predicts a .35 increase in _points_. This relationship is displayed in the graphic above. The multiple R squared in our summary is about .19, meaning our model explains approximately 19% of the variance in _points_. Since p < .001 we can conclude that there is a strong possiblity that this relationship is not due to chance. To illustrate the relationship I'll plot my data together with the regression line:
+We can make some general observations regarding the model. From the model summary above we know that one more point on the _attitude_ scale predicts a .35 increase in _points_. This relationship is displayed in the graphic above. A simple regression correspons to the very basic formula $$y = \alpha + \beta x $$ In the summary above the values corresponding to $\alpha = 11.64$ and $\beta = 0.35$ 
+The multiple R squared in our summary is about .19, meaning our model explains approximately 19% of the variance in _points_. Since p < .001 we can conclude that there is a very low probability that this relationship would be due to chance. To illustrate the relationship I'll plot my data together with the regression line:
 ```{r}
 qplot(attitude, points, data = learning2014) + geom_smooth(method = "lm")
 ```
