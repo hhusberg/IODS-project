@@ -1,0 +1,35 @@
+# Chapter 3 - Logistic regression
+
+<!---
+Exploring data and interpreting logistic regresion analysis
+-->
+```{r echo = FALSE, results='hide', message=FALSE}
+library(dplyr)
+library(GGally)
+```
+This time we'll take a look at student alcohol consumption. First off (although I did secretly load some libraries above), let's get the data that I've wrangled into shape earlier:
+
+```{r}
+alc <- read.csv("./data/alc_data.csv")
+glimpse(alc)
+```
+
+Alright, so we have 382 observations of 35 variables, including information on which school they attend, sex, age, urban/rural living etc. Most importantly for our purposes we have information on both workday and weekend alcohol consumption. This I have already averaged to a daily measure of consumption and then arbitrarily decided that if that consumption surpasses the integer 2, the students in question are _high_ consumers of alcohol. In the following examples we shall see the results of this excessive consumption.
+This data has been created by joining two separate datasets, one gathered at a math course, the other a Portugese language course. The numeric values have been averaged and rounded while for the non-numeric variables the value from the Math dataset is used. So for example the G1-G3 variables represent rounded averages of students' Math and Portugese school grades.
+
+Now let's get analytical.I've been instructed to _study the relationships between high/low alcohol consumption and some other variables_. So that's what I'll do. There are many variables that have the potential to explain student alcohol consumption and I have to choose 4 of them. I'll pick the obvious ones first: failures, or the number of past class failures (would drive any sane person to the bottle) and sex (guys drink more - duh!). Oh, and age - that has got to be relevant - the older students drink more. Now, my fourth pick might be less obvious though it shouldn't. Internet access at home - if you don't have that, what else you gonna do? Right. So, my variables of choice, in hypothesized order of (absolute) relevance to alcohol consumption:
+
+* sex
+* age
+* internet
+* failures
+
+
+Here's a quick glance at those variables:
+```{r}
+summary(alc$sex)
+summary(alc$age)
+summary(alc$internet)
+summary(alc$failures)
+```
+
