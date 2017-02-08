@@ -42,7 +42,7 @@ g1 <- ggplot(data=alc, aes(x = high_use, fill = sex))
 g1 + geom_bar()
 ```
 
-So easy guess, the ratio of non-high to high consumers looks way higher for females. That should be a significant predictor of high alcohol consumption.Now letäs look at age:
+So easy guess, the ratio of non-high to high consumers looks way higher for females. That should be a significant predictor of high alcohol consumption.Now let?s look at age:
 
 ```{r}
 
