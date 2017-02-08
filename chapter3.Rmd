@@ -6,6 +6,7 @@ Exploring data and interpreting logistic regresion analysis
 ```{r echo = FALSE, results='hide', message=FALSE}
 library(dplyr)
 library(GGally)
+library(ggplot2)
 ```
 This time we'll take a look at student alcohol consumption. First off (although I did secretly load some libraries above), let's get the data that I've wrangled into shape earlier:
 
@@ -32,4 +33,11 @@ summary(alc$age)
 summary(alc$internet)
 summary(alc$failures)
 ```
+Ok, so this doesn't tell me so much just yet. About 50-50 female/male. Mean age just under 17 years, span 15-22. Most have a working internet connection at home, and the summary of the failures variable looks really weird.
 
+Let's look at some plots to get a feel for these variables.
+
+```{r}
+g1 <- ggplot(data=alc, aes(x = high_use, fill = sex))
+g1 + geom_bar()
+```
