@@ -35,9 +35,15 @@ summary(alc$failures)
 ```
 Ok, so this doesn't tell me so much just yet. About 50-50 female/male. Mean age just under 17 years, span 15-22. Most have a working internet connection at home, and the summary of the failures variable looks really weird.
 
-Let's look at some plots to get a feel for these variables.
+Let's look at some plots to get a feel for these variables. Let's start with a simple bar plot colored by sex:
 
 ```{r}
 g1 <- ggplot(data=alc, aes(x = high_use, fill = sex))
 g1 + geom_bar()
+```
+
+So easy guess, the ratio of non-high to high consumers looks way higher for females. That should be a significant predictor of high alcohol consumption.Now letäs look at age:
+
+```{r}
+
 ```
