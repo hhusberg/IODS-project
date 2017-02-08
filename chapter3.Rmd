@@ -94,3 +94,38 @@ coef(my_glmodel2)
 ```
 
 Ok, so in this simplified model Male sex and number of failures predict alcohol usage. The coefficients are presented separately above for clarity.
+
+Next I'll use the model to predict probabilties of high use and tabulate these.
+
+```{r}
+probabilities <- predict(my_glmodel2, type = "response")
+alc <- mutate(alc, probability = probabilities)
+alc <- mutate(alc, prediction = probability > 0.5)
+table(high_use = alc$high_use, prediction = alc$prediction)
+```
+
+Ok, so this so called _confusion matrix_ tells me that my model gives 261 true negatives, 11 true positives, 103 false negatives and 7 false positives. I have a hard time telling if that's good or bad, so I'll plot it to see if it makes me more confident.
+
+```{r}
+g3 <- ggplot(alc, aes(x = probability, y = high_use, col = prediction))
+g3 + geom_point()
+```
+
+To be honest that didn't help me very much. I'll calculate the mean prediction error to see if that makes sense:
+```{r}
+loss_func <- function(class, prob) {
+  n_wrong <- abs(class - prob) > 0.5
+  mean(n_wrong)
+}
+loss_func(class=alc$high_use, alc$probability)
+```
+So this figure would indicate that a mean of 29% of the predictions of this model are wrong, right? So that means a mean of 71% is correct. Now, if we were to assign these students to high/non-high alcohol usage with no data we'd probably get about 50% right, so we're a bit better off using the model.
+
+Now for some bonus points I'll do a bit of cross-validating (I'll be needing those points I guess...).
+
+```{r}
+library(boot)
+cv <- cv.glm(data = alc, cost = loss_func, glmfit = my_glmodel2, K = 10)
+cv$delta[1]
+```
+So this model, using 10-fold cross-validation, does not outperform the DataCamp model (0.29 vs DC's 0.26). If I have time before Friday, I'll go about looking for some predictors to outperform the DC model. If you are assessing this and this is the last line you read, I was not able to find time for that...
