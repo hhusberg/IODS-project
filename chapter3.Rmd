@@ -42,8 +42,55 @@ g1 <- ggplot(data=alc, aes(x = high_use, fill = sex))
 g1 + geom_bar()
 ```
 
-So easy guess, the ratio of non-high to high consumers looks way higher for females. That should be a significant predictor of high alcohol consumption.Now let?s look at age:
+So easy guess, the ratio of non-high to high consumers looks way higher for females. That should be a significant predictor of high alcohol consumption.Now let's look at age:
 
 ```{r}
+g2 <- ggplot(data=alc, aes(x = high_use, y = age, col = sex))
+g2 + geom_jitter()
+```
+
+When looking at the relationship between age and high alcohol consumption through a jitter-plot, it does seem pretty random. Based on this I don't think age is going to be a significant predictor of alcohol consumption.
+
+Next up, internet. For this, a simple cross-tabulation will give us some indication of the relationship between internet access and high alcohol consumption:
+```{r}
+table(alc$high_use, alc$internet)
+```
+Seems like the ratios are pretty comparable, but we'll check it out with glm soon enough.
+
+Last up, school failures:
+```{r}
+table(alc$high_use, alc$failures)
+```
+To start with, this variable is very heavily zero-inflated, so we'll see what we can do with it. It does seem however that the ratio of school failures vs none is rather inflated for students with high alcohol use.
+
+Now I'll just chuck these in a logistic regrerssion model and we'll see what comes out:
+```{r}
+my_glmodel <- glm(high_use ~ sex + age + internet + failures, data = alc, family="binomial")
+summary(my_glmodel)
 
 ```
+  
+We'll now take a closer look at each of these variables by interpreting them as odds ratios and looking at the confidence intervals:
+
+```{r}
+OR <- coef(my_glmodel) %>% exp
+CI <- confint(my_glmodel) %>% exp
+cbind(OR, CI)
+```
+A look at the confidence intervals shows us that in accordance with our hypotheses (those informed by graphs/cross-tabs):
+
+  * Males are more likely to be high users (CI does not contain 1)
+  * Age is not a statistically significant predictor of alcohol use (CI contains 1)
+  * Neither is internet access (CI contains 1)
+  * School failures seems to predict alcohol use (CI does not contain 1)
+
+
+
+I'll do a quick rerun with a simplified model:
+```{r}
+my_glmodel2 <- glm(high_use ~ sex + failures, data = alc, family = "binomial")
+summary(my_glmodel2)
+coef(my_glmodel2)
+```
+
+Ok, so in this simplified model Male sex and number of failures predict alcohol usage. The coefficients are presented separately above for clarity.
