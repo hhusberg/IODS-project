@@ -77,3 +77,10 @@ eighty_perc <- sample(n, size = n * 0.8)
 train <- myboston_scaled[eighty_perc,]
 test <- myboston_scaled[-eighty_perc,]
 ```
+
+Now it's time for some LDA.
+
+```{r}
+lda.fit <- lda(crim_cat ~ ., data = train)
+lda.fit
+```
