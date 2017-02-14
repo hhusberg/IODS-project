@@ -1,0 +1,79 @@
+# Chapter 4 - Clustering and classification
+
+```{r echo = FALSE, results='hide', message=FALSE}
+library(MASS)
+library(dplyr)
+library(GGally)
+library(ggplot2)
+library(corrplot)
+```
+
+Libraries loaded, let's get clustering. First up we'll look at the structure and dimensions of the Boston data, a dataframe generously provided as part of the R package MASS.If you want to know more about this dataset have a look [here](https://stat.ethz.ch/R-manual/R-devel/library/MASS/html/Boston.html). Now a quick overview of the data:
+
+```{r}
+str(Boston)
+dim(Boston)
+
+summary(Boston$crim)
+
+summary(Boston$tax)
+```
+
+So in brief, this data describes housing values in the suburbs of Boston. We have 14 variables and 506 observations.The variable _crim_ refers to per capita crime rate and will be our primary variable of interest. Examples of other variables are _chas_, a dichotomous variable describing whether the area bounds the river Charles or not; _rm_, the average number of rooms per dwelling in the area and _ptratio_, the ratio of pupils to teacher. Check out the link above for full details on the variables.
+
+As is obvious from the summary above, the scales of these variables are very dissimilar (I used _crim_ and _tax_ to illustrate this). This is not a problem as long as we're looking at correlations, where they're standardized anyway, but later we'll standardize them for our other analyses.
+
+Now for a quick look at how these variables interact:
+
+```{r}
+p <- ggpairs(Boston, mapping = aes(alpha = 0.3), lower = list(combo = wrap("facethist", bins = 20)))
+p
+```
+
+From this, we can tell that some of the variables seem to be quite strongly related and that not very many have anything close to a normal distribution. So let's have a look at the correlation matrix to get some figures for those relationships. Below the correlation matrix I'll do a correlation plot to illustrate these figures, because I can:
+
+```{r}
+cor_matrix <- cor(Boston) %>% round(digits = 2)
+cor_matrix
+corrplot(cor_matrix, method="circle", type="upper", cl.pos="b", tl.pos="d", tl.cex=0.6)
+```
+
+As could be assumed from the scatterplots many of these variables are quite strongly correlated. So for example there is a correlation of .63 between the variables _crim_, which is the crime rate, and _rad_, which is the index of acessibility to radial highways. Highway robbery? Go figure.
+
+There's a few rather obvious relationships, for example the level of industry _(indus)_ is positively correlated with the level of air pollution _(nox)_. To read more about the dangers of nitrogen oxide, see [Wikipedia](https://en.wikipedia.org/wiki/NOx).
+
+Now we'll standardize the dataset. If I remember to do so I'll look up an easy explanation for why this needs to be done and _insert it here_. If it's still missing at the time of assessment, assume I know but forgot to update my diary...
+
+To scale the whole dataset at once, we'll do this:
+
+```{r}
+myboston_scaled <- scale(Boston)
+summary(myboston_scaled)
+myboston_scaled <- as.data.frame(myboston_scaled)
+```
+
+That was easy. Now the variables all have a mean of zero and a standard deviation of one. Now we're to create a categorical crime rate variable using quantiles as break points. This will allow us to (arbitrarily) define crime rates as low, moderate or high. 
+
+```{r}
+cutoffs <- quantile(myboston_scaled$crim)
+labels <- c("low", "mod_low", "mod_high", "high")
+crim_cat <- cut(myboston_scaled$crim, breaks=cutoffs, include.lowest = TRUE, label = labels)
+table(crim_cat)
+```
+
+So there we have them tabled, obiously (approximately) the same amount of observations per quantile. Oh, now we have to get rid of the old, continuous _crim_-variable and add the new one:
+
+```{r}
+myboston_scaled <- dplyr::select(myboston_scaled, -crim)
+myboston_scaled <- data.frame(myboston_scaled, crim_cat)
+str(myboston_scaled)
+```
+
+Looks good. Now this dataset needs to be divided into a __training__ set and a __testing__ set. To do that we'll use the function _nrow()_ to get the number of rows and then randomly select 80% of those for our training set:
+
+```{r}
+n <- nrow(myboston_scaled)
+eighty_perc <- sample(n, size = n * 0.8)
+train <- myboston_scaled[eighty_perc,]
+test <- myboston_scaled[-eighty_perc,]
+```
