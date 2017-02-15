@@ -78,9 +78,86 @@ train <- myboston_scaled[eighty_perc,]
 test <- myboston_scaled[-eighty_perc,]
 ```
 
-Now it's time for some LDA.
+Now it's time for some LDA. First we'll compute the LDA fit using all the variables in the dataset:
 
 ```{r}
 lda.fit <- lda(crim_cat ~ ., data = train)
 lda.fit
+```
+
+Then we'll draw a biplot:
+
+```{r}
+lda.arrows <- function(x, myscale = 0.5, arrow_heads = 0.1, color = "red", tex = 0.75, choices = c(1,2)){
+  heads <- coef(x)
+  arrows(x0 = 0, y0 = 0, 
+         x1 = myscale * heads[,choices[1]], 
+         y1 = myscale * heads[,choices[2]], col=color, length = arrow_heads)
+  text(myscale * heads[,choices], labels = row.names(heads), 
+       cex = tex, col=color, pos=3)
+}
+classes <- as.numeric(train$crim_cat)
+plot(lda.fit, dimen = 2, col = classes, pch = classes)
+lda.arrows(lda.fit, myscale = 2)
+
+```
+
+Next we'll save the classes from the test set as a new vector and remove them from the test set:
+
+```{r}
+correct_classes <- test$crim_cat
+test <- dplyr::select(test, -crim_cat)
+```
+
+And finally, we'll use our LDA-model to predict classes for the test set and compare those to the correct classes by cross-tabulating:
+
+```{r}
+lda.pred <- predict(lda.fit, newdata = test)
+table(correct = correct_classes, predicted = lda.pred$class)
+```
+
+So our model predicted the crime rates rather well. A quick calculation gives us a total of
+```{r}
+total <- c(18+17+14+26+5+1+7+7)
+total
+```
+observations of which
+```{r}
+corr <- c(18+17+14+26)
+corr
+```
+were correctly predicted while
+```{r}
+wrong <- c(5+1+7+7)
+wrong
+```
+were incorrectly predicted, resulting in a prediction accuracy of
+```{r}
+ratio <- c(corr/total)
+ratio
+```
+
+In conclusion our model was fairly accurate in predicting crime rates.
+
+Now it's time to look at the clustering and distances. First up we'll reload the Boston data and scale it:
+```{r}
+new_Boston <- Boston
+str(new_Boston)
+new_Boston_scaled <- scale(new_Boston) %>% as.data.frame()
+class(new_Boston_scaled)
+str(new_Boston_scaled)
+```
+
+Then we'll get the Euclidean distance between observations:
+
+```{r}
+dist_eu <- dist(new_Boston_scaled)
+summary(dist_eu)
+head(dist_eu)
+```
+
+Then we will run k-means:
+```{r}
+km <-kmeans(dist_eu, centers=4)
+pairs(new_Boston_scaled, col = km$cluster)
 ```
