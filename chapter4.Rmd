@@ -52,7 +52,9 @@ summary(myboston_scaled)
 myboston_scaled <- as.data.frame(myboston_scaled)
 ```
 
-That was easy. Now the variables all have a mean of zero and a standard deviation of one. Now we're to create a categorical crime rate variable using quantiles as break points. This will allow us to (arbitrarily) define crime rates as low, moderate or high. 
+That was easy. Now the variables all have a mean of zero and a standard deviation of one. 
+
+Now we're to create a categorical crime rate variable using quantiles as break points. This will allow us to (arbitrarily) define crime rates as low, moderate or high. 
 
 ```{r}
 cutoffs <- quantile(myboston_scaled$crim)
@@ -85,6 +87,15 @@ lda.fit <- lda(crim_cat ~ ., data = train)
 lda.fit
 ```
 
+Now, I'm a bit slow when it comes to understanding statistics, so i had to listen to this weeks presentation many times, read the blog posts and then dig around the internet for quite some time before being able to give a satisfactory explanation of this output. To start with, the _prior probabilities_ should be the number of observations in each class divided by the number of observations in the whole datast. The _group means_ show the means for each variable in each class, and in this dataset pretty much every variable has quite different means for different classes of the target variable.
+
+Next i our output we have our _coefficients of linear discriminants_. This is the output I had to shop  around for a proper explanation. I liked [this one](https://rstudio-pubs-static.s3.amazonaws.com/35817_2552e05f1d4e4db8ba87b334101a43da.html).
+
+So according to the site linked above, the first discriminant function in our case (LD1) is a linear combination of the variables above with their listed loadings (to borrow a term from factor analysis) like so:
+$0.08 * zn + 0.05 * indus + ... + 0.17 * medv.$
+
+Then last, the _proportion of trace_ tells us that our first discriminant function explains 94,4% of the between group variance while LD2 and LD3 add a pitiful 5,6% combined.
+
 Then we'll draw a biplot:
 
 ```{r}
@@ -101,6 +112,8 @@ plot(lda.fit, dimen = 2, col = classes, pch = classes)
 lda.arrows(lda.fit, myscale = 2)
 
 ```
+
+As we can see, the length of the arrows correspond with the size of the discriminant coefficients in the lda output above, i.e. _rad_ has the largest absolute value (for LD1) and the longest arrow, _zn_ and _nox_ have high absolute values for LD2 and LD3. What this plot also shows is that while LD1 seems to discriminate very well between high crime and the rest, LD2 helps to discriminate the other 3 groups. How to illustrate LD3 is beyond me, so onwards with some predictions. 
 
 Next we'll save the classes from the test set as a new vector and remove them from the test set:
 
