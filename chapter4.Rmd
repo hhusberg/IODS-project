@@ -185,9 +185,11 @@ twcss <- sapply(1:k_max, function(k){kmeans(dist_eu, k)$tot.withinss})
 plot(1:k_max, twcss, type='b')
 ```
 
-Based on this, it actually seems two clusters would be optimal rather than 4. So we'll run k-means with two clusters and have a look at the plots:
+Based on this, it actually seems two clusters could be interpreted as optimal rather than 4. So we'll run k-means with two clusters and have a look at the plots:
 
 ```{r}
 km <-kmeans(dist_eu, centers=2)
 pairs(new_Boston_scaled, col = km$cluster)
 ```
+
+Now to be honest I find it very hard to interpret these clusters. To start off with, it's too small and too much to be visualized. However, it seems that two clusters discriminate pretty well for most pairs of variables but that for some, three or four clusters can be distinguished.
