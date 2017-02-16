@@ -169,8 +169,25 @@ summary(dist_eu)
 head(dist_eu)
 ```
 
-Then we will run k-means:
+Then we will run k-means with 4 centers, setting the seed before so we can compare results better:
 ```{r}
+set.seed(123)
 km <-kmeans(dist_eu, centers=4)
+pairs(new_Boston_scaled, col = km$cluster)
+```
+
+
+To determine the optimal number of clusters we will calculate the total Within Cluster Sum of Squares, which is simply the squared sum of the distances between each observation in a cluster and it's centroid. We'll set a maximum number of clusters to be high enough so we can be sure our optimal number is within the range of clusters used in the calculation.
+
+```{r}
+k_max <- 10
+twcss <- sapply(1:k_max, function(k){kmeans(dist_eu, k)$tot.withinss})
+plot(1:k_max, twcss, type='b')
+```
+
+Based on this, it actually seems two clusters would be optimal rather than 4. So we'll run k-means with two clusters and have a look at the plots:
+
+```{r}
+km <-kmeans(dist_eu, centers=2)
 pairs(new_Boston_scaled, col = km$cluster)
 ```
