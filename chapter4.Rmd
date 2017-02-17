@@ -193,3 +193,5 @@ pairs(new_Boston_scaled, col = km$cluster)
 ```
 
 Now to be honest I find it very hard to interpret these clusters. To start off with, it's too small and too much to be visualized. However, it seems that two clusters discriminate pretty well for most pairs of variables but that for some, three or four clusters can be distinguished.
+
+That's it for this weeks exercise. Unfortunately, the usefulness of the latter part of the exercise kind of escapes me, and I felt that the videos and blog sites either didn't explain it very well or didn't quite match the exercise. But this is probably just my ignorance speaking.
