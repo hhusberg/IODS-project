@@ -1,4 +1,9 @@
 #Exercise 4 - Data Wrangling
+#Henrik Husberg
+#Data wrangling for exercises 4 and 5
+
+#Exercise 4 starts here
+
 library(plyr)
 
 #Read datas:
@@ -35,3 +40,5 @@ library(dplyr)
 human <- inner_join(hdnew, giinew, by = c(join_by), suffix = c(".hd", ".gii"))
 names(human)
 dim(human)
+
+#Exercise 5 starts here
