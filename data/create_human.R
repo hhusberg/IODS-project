@@ -40,5 +40,36 @@ library(dplyr)
 human <- inner_join(hdnew, giinew, by = c(join_by), suffix = c(".hd", ".gii"))
 names(human)
 dim(human)
-
+human
 #Exercise 5 starts here
+library(stringr)
+
+#Replace strings with numeric values
+human$gni <- str_replace(human$gni, pattern=",", replace ="") %>% as.numeric
+human$gni
+
+#Keep only named columns
+keep_columns <- c("country", "sec_ed_F2M", "labour_F2M", "eduexp", "lifeexp", "gni", "matmort", "ado_birth", "rep_parl")
+human <- select(human, one_of(keep_columns))
+names(human)
+
+#Listwise deletion
+human <- filter(human, complete.cases(human) == TRUE)
+
+#Remove regions
+human$country
+last <- nrow(human) - 7
+human <- human[1:last, ]
+dim(human)
+
+#Define rownames according to country and delete column "country"
+rownames(human) <- human$country
+human <- subset(human, select = -c(country))
+dim(human)
+
+setwd("~/GitHub/IODS-project")
+write.csv(human, file = "./data/human.csv", row.names=TRUE)
+human_test <- read.csv(file = "./data/human.csv", row.names = 1)
+identical(human, human_test)
+library(compare)
+compare(human, human_test)

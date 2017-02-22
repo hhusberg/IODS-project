@@ -1,0 +1,37 @@
+---
+title: "Chapter5"
+author: "Henrik Husberg"
+date: "21.02 2017"
+output: html_document
+---
+# Chapter 5 - Dimensionality reduction techniques
+
+This weeks exercises are all about dimension reductoin. This is very interesting for me because I've been using confirmatory factor analysis in my own research, and I've dabbled a little in PLS Path Modeling on my spare time. So let's see if I can make sense of Principal Component Analysis and Multiple Correspondence Analysis.
+
+First we'll load the 'human' data frame and look at the structure and dimension of it.
+
+```{r}
+human <- read.csv(file = "./data/human.csv", row.names = 1)
+str(human)
+dim(human)
+```
+Here's a list of the variables included:
+
+* **sec_edF2M:**
+* **labour_F2M:**
+* **eduexp:**
+* **lifeexp:**
+* **gni:**
+* **matmort:**
+* **ado_birth:**
+* **rep_parl:**
+
+Here's a graphical overview of the variables:
+
+```{r}
+library(GGally)
+library(ggplot2)
+p <- ggpairs(human, mapping = aes(alpha = 0.3), lower = list(combo = wrap("facethist", bins = 20)))
+p
+```
+
