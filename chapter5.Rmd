@@ -6,6 +6,8 @@ output: html_document
 ---
 # Chapter 5 - Dimensionality reduction techniques
 
+##PCA
+
 This weeks exercises are all about dimension reductoin. This is very interesting for me because I've been using confirmatory factor analysis in my own research, and I've dabbled a little in PLS Path Modeling on my spare time. So let's see if I can make sense of Principal Component Analysis and Multiple Correspondence Analysis.
 
 First we'll load the 'human' data frame and look at the structure and dimension of it.
@@ -53,6 +55,7 @@ pca_human
 summary(pca_human)
 biplot(pca_human, choices = 1:2, cex = c(0.4, 1.5), col = c("grey40", "deeppink2"))
 ```
+
 This biplot suggests that almost all the variance is captured by one variable: the gross national income per capita, _(gni)_.
 
 Now we'll do this again using standardized values for all our variables:
@@ -64,7 +67,61 @@ pca_human_std
 summary(pca_human_std)
 biplot(pca_human_std, choices = 1:2, cex = c(0.4, 1.5), col = c("darkgreen", "purple"))
 ```
+
 Ok, so obviously the variables have to be on the same scale in order for us to be able to interpret the results of PCA properly. In the first instance, with the unstandardized variables, all the variance seemed to be capured by _gni_. Because PCA assumes that larger variance = more important and _gni_ is measured in $ and ranging from 581 to 123124, this is why it is assigned way too much weight in the unstandardized PCA.
 
 Ok, so back to our standardized biplot. The first two components explain 53,6% and 16,2% of the variance in our datamatrix, or 69,9% together. PC1 consists of positive loadings by maternal mortality and adolescent birth as well as negative loadings of gross national income, expected education, life expectancy and ratio of females to males with at least secondary education. PC2 consists of positive loadings by female parliamentary representation and ratio of females to males in labour. Roughly speaking these could be interpreted as a component representing "socioeconomic equality" (PC1) and one component for "gender equality" (PC2). So about 70% of the variance between countries could be explained by these two dimensions. 
 
+
+##MCA
+
+Next, we'll have a look at the _tea_ dataset from Factominer.
+
+```{r}
+library(FactoMineR)
+library(dplyr)
+library(tidyr)
+data(tea)
+str(tea)
+dim(tea)
+
+```
+
+This is quite a large dataset with 36 variables. In order to make interpretations a bit easier I will only use a few of these:
+
+* **Tea:** The kind of tea they drink
+```{r}
+summary(tea$Tea)
+```
+* **How:** How they prefer their tea
+```{r}
+summary(tea$How)
+```
+* **sex:** Gender
+```{r}
+summary(tea$sex)
+```
+* **SPC:** Proxy for socioeconomic status
+```{r}
+summary(tea$SPC)
+```
+* **age:** Continuous variable for age
+```{r}
+summary(tea$age)
+```
+
+Now I'll select these to keep:
+
+```{r}
+keep <- c("Tea", "How", "sex", "SPC", "age")
+tea_shrt <- select(tea, one_of(keep))
+names(tea_shrt)
+```
+
+Ok, now we know a bit about the variables. Now we'll run the MCA, using our categorical variables as active and our continuous as a supplementary variable:
+
+```{r}
+tea_mca <- MCA(tea_shrt, quanti.sup=5, graph = FALSE)
+plot(tea_mca, invisible = c("var"))
+plot(tea_mca, invisible = c("ind"), habillage="quali")
+```
