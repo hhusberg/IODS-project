@@ -114,7 +114,7 @@ Now I'll select these to keep:
 
 ```{r}
 keep <- c("Tea", "How", "sex", "SPC", "age")
-tea_shrt <- select(tea, one_of(keep))
+tea_shrt <- dplyr::select(tea, one_of(keep))
 names(tea_shrt)
 ```
 
@@ -124,4 +124,13 @@ Ok, now we know a bit about the variables. Now we'll run the MCA, using our cate
 tea_mca <- MCA(tea_shrt, quanti.sup=5, graph = FALSE)
 plot(tea_mca, invisible = c("var"))
 plot(tea_mca, invisible = c("ind"), habillage="quali")
+summary(tea_mca)
+```
+
+Now, looking first at the first _individuals_ plot, there does not seem to be any clear groupings of individuals affecting the dimensions. When we look at the plot of _categories_, we can see that they are pretty much grouped around the center of the factor map. Three categories stand out a bit, the _other_ category from the _How_-variable; the _workman_ category from the _SPC_-variable and the _senior_ category from the _SPC_variable. So it would seem that drinking your tea any other way than with lemon, milk or plain separates you from the pack. Likewise, workmen and (what I assume is) senior management seem to have tea habits that are different from most other. 
+
+Just for the fun of it, I'll do one more plot where I color code individuals according to their preferred way of having their tea:
+
+```{r}
+plot(tea_mca, invisible = c("var"), habillage="How")
 ```
