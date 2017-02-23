@@ -15,16 +15,19 @@ human <- read.csv(file = "./data/human.csv", row.names = 1)
 str(human)
 dim(human)
 ```
-Here's a list of the variables included:
 
-* **sec_edF2M:**
-* **labour_F2M:**
-* **eduexp:**
-* **lifeexp:**
-* **gni:**
-* **matmort:**
-* **ado_birth:**
-* **rep_parl:**
+The data is taken from the Human Development Report 2015 which has been collected from different sources (see [this pdf](http://hdr.undp.org/sites/default/files/hdr2015_technical_notes.pdf) for more info.)
+
+Here's a short description of the variables included:
+
+* **sec_edF2M:** ratio of proportions of females/males with at least secondary education
+* **labour_F2M:** ratio of proportions of females/males in labour force
+* **eduexp:** expected years of schooling
+* **lifeexp:** life expectancy at birth
+* **gni:** gross national income per capita
+* **matmort:** maternal mortality ratio
+* **ado_birth:** adolescent birth rate
+* **rep_parl:** percentage of female representatives in parliament
 
 Here's a graphical overview of the variables:
 
@@ -33,5 +36,35 @@ library(GGally)
 library(ggplot2)
 p <- ggpairs(human, mapping = aes(alpha = 0.3), lower = list(combo = wrap("facethist", bins = 20)))
 p
+summary(human)
 ```
+
+From these we can see that gni and matmort are heavily positively skewed. There are some notable correlations between the variables. For example a rather obvious strong negative correlation between life expectancy and maternal mortality, education coorrelates negatively with adolescent brith rate and gross national income has a positive correlation with education but a negative correlation with maternal mortality. What's maybe more interesting is what looks like a lack of a significant correlation between for example ratio of females to males with secondary education and female parliamentary representation.
+
+From the summary we can also see that the variables have very different scales, with some variables being ratios and other being percentages (eg. rep_parl) or years (eg. lifeexp).
+
+Now well run principal component analysis (PCA) in order to find the components that capture the most of the variance.  
+
+Next we'll do a principal component analysis on this unstandardized data and visualize the results with a biplot:
+
+```{r}
+pca_human <- prcomp(human)
+pca_human
+summary(pca_human)
+biplot(pca_human, choices = 1:2, cex = c(0.4, 1.5), col = c("grey40", "deeppink2"))
+```
+This biplot suggests that almost all the variance is captured by one variable: the gross national income per capita, _(gni)_.
+
+Now we'll do this again using standardized values for all our variables:
+```{r}
+human_std <- scale(human)
+summary(human_std)
+pca_human_std <- prcomp(human_std)
+pca_human_std
+summary(pca_human_std)
+biplot(pca_human_std, choices = 1:2, cex = c(0.4, 1.5), col = c("darkgreen", "purple"))
+```
+Ok, so obviously the variables have to be on the same scale in order for us to be able to interpret the results of PCA properly. In the first instance, with the unstandardized variables, all the variance seemed to be capured by _gni_. Because PCA assumes that larger variance = more important and _gni_ is measured in $ and ranging from 581 to 123124, this is why it is assigned way too much weight in the unstandardized PCA.
+
+Ok, so back to our standardized biplot. The first two components explain 53,6% and 16,2% of the variance in our datamatrix, or 69,9% together. PC1 consists of positive loadings by maternal mortality and adolescent birth as well as negative loadings of gross national income, expected education, life expectancy and ratio of females to males with at least secondary education. PC2 consists of positive loadings by female parliamentary representation and ratio of females to males in labour. Roughly speaking these could be interpreted as a component representing "socioeconomic equality" (PC1) and one component for "gender equality" (PC2). So about 70% of the variance between countries could be explained by these two dimensions. 
 
